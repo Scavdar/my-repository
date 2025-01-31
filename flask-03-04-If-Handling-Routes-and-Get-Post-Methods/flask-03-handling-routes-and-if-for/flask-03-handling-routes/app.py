@@ -29,7 +29,7 @@ def my_error():
 # Create a function named admin which redirect the request to the error path 
 # and assign to the route of ('/admin')
 @app.route("/admin")
-def admin():
+def admin(): 
     return redirect(url_for("my_error"))
 
 
