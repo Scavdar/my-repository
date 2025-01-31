@@ -41,6 +41,8 @@ def login():
     else:
         # the GET method
         return render_template("login.html")
+    
+    ########
 
 
 # Add a statement to run the Flask application
