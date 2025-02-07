@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: |
+  This template launches an EC2 instance and a security group with open SSH and HTTP ports.
+  
+Resources:
+  webServer:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0ac4dfaf1c5c0cce9
+      InstanceType: t2.micro
+      KeyName: serdar_firstkey
+      SecurityGroups:
+        - !Ref webServerSgGroup
+      Tags:
+        - Key: Name
+          Value: cfn-instance-serdar
+        - Key: Environment
+          Value: Dev
+        - Key: Department
+          Value: IT
+  
+  webServerSgGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Open SSH and HTTP ports" # Required
+      SecurityGroupIngress: 
+        - CidrIp: 0.0.0.0/0
+          FromPort: 22
+          IpProtocol: "tcp"
+          ToPort: 22
+        - CidrIp: 0.0.0.0/0
+          FromPort: 80
+          IpProtocol: "tcp"
+          ToPort: 80
+      Tags: 
+        - Key: Name
+          Value: cfn-sg-Serdar

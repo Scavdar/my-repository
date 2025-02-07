@@ -1,0 +1,53 @@
+key: value
+key-1: value
+key-3:
+  key-4: key-5:value
+number: 5
+float: 5.67
+string: summer
+string-number: "5"
+boolean: true
+boolean-2: false
+null:-type: null
+skills:
+  - Python
+  - Bash
+  - Linux
+  - Kubernetes
+skills-2:
+  - Python
+  - Bash
+  - Linux
+  - Kubernetes
+user:
+  name:Yuri: null
+  age:20: null
+  city:Toronto: null
+user-2:
+  name: Yuri
+  age: 20
+  city: Toronto
+user-3:
+  name: Mary
+  age: 72
+  city: Toronto
+user-4:
+  name: Greg
+  age: 35
+  skils:
+    - Good Communication
+    - Hard worker
+    - Patient
+  children:
+    - name: Sam
+      age: 3
+    - name: Luka
+      age: 1
+multiline: |
+  The quick brown fox jumps over the lazy dog.
+  The five boxing wizards jump quicly.
+multiline-fols: >
+  The quick brown fox jumps over the lazy dog. The five boxing wizards jump
+  quicly. A sunny summer day. 
+string-multi: The quick brown fox jumps over the lazy dog. The five boxing
+  wizards jump quicly. A sunny summer day.
