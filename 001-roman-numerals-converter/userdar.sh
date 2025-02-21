@@ -21,3 +21,7 @@
 mkdir templates
 wget ${FOLDER}/templates/index.html
 wget ${FOLDER}/templates/result.html
+
+# run the python application
+          cd ..
+          python3 app.py
