@@ -14,7 +14,7 @@
           cd /home/ec2-user
 
           # get the app.py file into current dir
-          FOLDER=FOLDER="https://raw.githubusercontent.com/Scavdar/my-repository/refs/heads/main/001-roman-numerals-converter"
+          FOLDER="https://raw.githubusercontent.com/Scavdar/my-repository/refs/heads/main/001-roman-numerals-converter"
           wget ${FOLDER}/app.py
 
 # get the templates into the templates/ directory

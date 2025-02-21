@@ -11,6 +11,10 @@ Parameters:
     Description: Key Name for instance
     Type: AWS::EC2::KeyPair::KeyName
 
+  LatestAmiId:
+      Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+      Default: '/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64'
+
 
 Resources:
 
@@ -35,7 +39,7 @@ Resources:
       Tags: 
         - Key: Name
           Value: serdar-webserver
-      ImageId: ami-053a45fff0a704a47
+      ImageId: !Ref LatestAmiId
       InstanceType: t2.micro
       KeyName: !Ref KeyPair
       SecurityGroupIds: 
@@ -57,7 +61,7 @@ Resources:
           cd /home/ec2-user
 
           # get the app.py file into current dir
-          FOLDER=FOLDER="https://raw.githubusercontent.com/Scavdar/my-repository/refs/heads/main/001-roman-numerals-converter"
+          FOLDER="https://raw.githubusercontent.com/Scavdar/my-repository/refs/heads/main/001-roman-numerals-converter"
           wget ${FOLDER}/app.py
 
           # get the templates into the templates/ directory
@@ -71,6 +75,14 @@ Resources:
           python3 app.py
 
 #Outputs:
+
+
+
+
+
+
+
+
 
 
 
