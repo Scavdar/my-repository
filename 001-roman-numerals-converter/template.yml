@@ -15,7 +15,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Allow HTTP and SSH
-      VpcId: vpc-06518cb64bbee87d1  # ✅ Ensures Security Group is created in your custom VPC
+      VpcId: vpc-06518cb64bbee87d1  # ✅ Attach Security Group to Your VPC
       SecurityGroupIngress: 
         - IpProtocol: tcp
           FromPort: 80
@@ -34,9 +34,10 @@ Resources:
           Value: serdar-webserver
       ImageId: !Ref LatestAmiId
       InstanceType: t2.micro
-      KeyName: serdar_firstkey  # ✅ Fixed Key Pair
+      KeyName: serdar_firstkey  # ✅ Use Correct Key Pair
       SecurityGroupIds: 
-        - !Ref SecurityGroup  # ✅ Correct way to attach Security Group
+        - !Ref SecurityGroup  # ✅ Correct Reference for Security Group
+      SubnetId: !Ref PublicSubnet  # ✅ Ensure instance is placed in a subnet
       UserData: !Base64 |
           #!/bin/bash -x
 
