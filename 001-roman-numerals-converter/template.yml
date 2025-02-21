@@ -34,7 +34,7 @@ Resources:
     Properties:
       Tags: 
         - Key: Name
-          Value: altaz-webserver
+          Value: serdar-webserver
       ImageId: ami-053a45fff0a704a47
       InstanceType: t2.micro
       KeyName: !Ref KeyPair
