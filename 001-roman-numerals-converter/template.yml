@@ -19,7 +19,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Allow HTTP and SSH
-      GroupName: WebServerSecurityGroup
+      VpcId: vpc-06518cb64bbee87d1  # ✅ Fixed VPC ID
       SecurityGroupIngress: 
         - IpProtocol: tcp
           FromPort: 80
