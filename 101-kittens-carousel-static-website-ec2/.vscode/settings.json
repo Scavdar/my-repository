@@ -1,0 +1,6 @@
+{
+    "yaml.schemas": {
+        "file:///Users/serdarcavdar/.vscode/extensions/docsmsft.docs-yaml-1.0.5/dist/toc.schema.json": "/toc\\.yml/i",
+        "https://raw.githubusercontent.com/aws/serverless-application-model/main/samtranslator/schema/schema.json": "file:///Users/serdarcavdar/Desktop/my-repository/101-kittens-carousel-static-website-ec2/cfn.yml"
+    }
+}
