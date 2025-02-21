@@ -37,7 +37,7 @@ Resources:
       KeyName: serdar_firstkey  # ✅ Use Correct Key Pair
       SecurityGroupIds: 
         - !Ref SecurityGroup  # ✅ Correct Reference for Security Group
-      SubnetId: !Ref PublicSubnet  # ✅ Ensure instance is placed in a subnet
+      SubnetId: subnet-0a1b2c3d4e5f67890  # ✅ Replace with your actual Subnet ID
       UserData: !Base64 |
           #!/bin/bash -x
 
