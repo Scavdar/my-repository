@@ -1,13 +1,20 @@
 AWSTemplateFormatVersion: 2010-09-09
 
+
 Description: |
   Build webserver for flask application
 
+
 Parameters:
 
+  KeyPair:
+    Description: Key Name for instance
+    Type: AWS::EC2::KeyPair::KeyName
+
   LatestAmiId:
-    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
-    Default: '/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64'
+      Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+      Default: '/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64'
+
 
 Resources:
 
@@ -15,7 +22,7 @@ Resources:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Allow HTTP and SSH
-      VpcId: vpc-06518cb64bbee87d1  # ✅ Attach Security Group to Your VPC
+      GroupName: WebServerSecurityGroup
       SecurityGroupIngress: 
         - IpProtocol: tcp
           FromPort: 80
@@ -34,40 +41,39 @@ Resources:
           Value: serdar-webserver
       ImageId: !Ref LatestAmiId
       InstanceType: t2.micro
-      KeyName: serdar_firstkey  # ✅ Use Correct Key Pair
+      KeyName: !Ref KeyPair
       SecurityGroupIds: 
-        - !Ref SecurityGroup  # ✅ Correct Reference for Security Group
-      SubnetId: subnet-0a1b2c3d4e5f67890  # ✅ Replace with your actual Subnet ID
+        - !GetAtt SecurityGroup.GroupId
       UserData: !Base64 |
           #!/bin/bash -x
 
           # update system
           yum update -y
 
-          # install Python and Flask
+          # install Python and flask
           yum install python3 -y
-          yum install python3-pip -y
-          pip3 install flask
+          yum install pip -y
+          pip install flask
+
+          #### install the code  ###
 
           # change to the user directory
           cd /home/ec2-user
 
           # get the app.py file into current dir
-          REPO_URL="https://raw.githubusercontent.com/Scavdar/my-repository/main/001-roman-numerals-converter"
-          wget ${REPO_URL}/app.py
+          FOLDER="https://raw.githubusercontent.com/Scavdar/my-repository/refs/heads/main/001-roman-numerals-converter"
+
+          wget ${FOLDER}/app.py
 
           # get the templates into the templates/ directory
-          mkdir -p templates
+          mkdir templates
           cd templates
-          wget ${REPO_URL}/templates/index.html
-          wget ${REPO_URL}/templates/result.html
+          
+          wget ${FOLDER}/templates/index.html
+          wget ${FOLDER}/templates/result.html
+
+          # run the python application
           cd ..
+          python3 app.py
 
-          # run the python application in the background
-          nohup python3 app.py > app.log 2>&1 &
-
-Outputs:
-
-  InstancePublicIP:
-    Description: Public IP address of the web server
-    Value: !GetAtt WebServer.PublicIp
+#Outputs:
