@@ -1,0 +1,107 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: |
+  This cfn file is used for creating a template which runs S3 static 
+  web-hosting using cloudfront distribution.
+
+Parameters:
+
+  pDomainName:
+    Description: Domain name for static website
+    Type: String
+    Default: kittens.serdarca.net
+
+  pHostedZoneId:
+    Description: Hosted Zone Id
+    Type: AWS::Route53::HostedZone::Id
+
+Resources:
+
+  s3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref pDomainName
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - BucketKeyEnabled: true
+            ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      WebsiteConfiguration:
+        IndexDocument: index.html
+
+  s3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref s3Bucket
+      PolicyDocument:
+        Id: PublicReadPolicy
+        Version: 2012-10-17
+        Statement:
+          - Sid: PublicReadForGetBucketObjects
+            Effect: Allow
+            Principal: '*'
+            Action: 's3:GetObject'
+            Resource: !Join [ '', [ !GetAtt s3Bucket.Arn, '/*' ] ]
+
+  acmCertificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Ref pDomainName
+      ValidationMethod: DNS
+      DomainValidationOptions: 
+        - DomainName: !Ref pDomainName
+          HostedZoneId: !Ref pHostedZoneId
+
+  cfDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        HttpVersion: http2
+        IPV6Enabled: false
+        PriceClass: PriceClass_100
+        Aliases:
+          - !Ref pDomainName
+        ViewerCertificate:
+          AcmCertificateArn: !Ref acmCertificate
+          MinimumProtocolVersion: TLSv1.2_2019
+          SslSupportMethod: sni-only
+        DefaultRootObject: index.html
+        Origins:
+          - Id: KittensOrigin
+            DomainName: !Select [2, !Split ["/", !GetAtt s3Bucket.WebsiteURL]]
+            CustomOriginConfig:
+              OriginProtocolPolicy: http-only
+        DefaultCacheBehavior:
+          TargetOriginId: KittensOrigin
+          Compress: true
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods:
+            - GET
+            - HEAD
+          CachePolicyId: "658327ea-f89d-4fab-a63d-7e88639e58f6"
+          CachedMethods:
+            - GET
+            - HEAD
+
+  r53RecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref pHostedZoneId
+      Name: !Ref pDomainName
+      Type: A
+      AliasTarget:
+        DNSName: !GetAtt cfDistribution.DomainName
+        HostedZoneId: Z2FDTNDATAQYW2
+
+
+Outputs:
+
+  S3WebLink:
+    Description: S3 Static Website Link
+    Value: !GetAtt s3Bucket.WebsiteURL

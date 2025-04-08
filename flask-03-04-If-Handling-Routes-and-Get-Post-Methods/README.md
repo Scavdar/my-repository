@@ -239,3 +239,504 @@ When sending request, the client can send data with using different http methods
 # app.run(host='0.0.0.0', port=80)
 ```
 
+\\\\\\\\\\\\\\\//////////////\\\\\\\\\\\\\/////////////\\\\\\\\\\\\\//////////\\\\\\\\\\\\\\\\\\\\\\\//////////////\\\\\\\//////
+
+
+1# AWSTemplateFormatVersion: 2010-09-09
+
+Description: |
+  Template to build the phonebook app and infrastructure
+
+Parameters:
+
+  vpc:
+    Description: VPC ID
+    Type: AWS::EC2::VPC::Id
+
+  
+Resources:
+
+  sgRds:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Allow access to RDS"
+      GroupName: "RDSAccess"
+      SecurityGroupIngress: 
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: "0.0.0.0/0"
+      VpcId: !Ref vpc
+
+  rdsDatabase:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: mysql
+      EngineVersion: "8.0.39"
+      Port: "3306"
+      DBInstanceIdentifier: phonebook-instance
+      DBName: clarusway_phonebook
+      MasterUsername: admin
+      MasterUserPassword: clarusway_1234
+      DBInstanceClass: db.t2.micro
+      AllocatedStorage: "20"
+      MultiAZ: false
+      VPCSecurityGroups: 
+        - !Ref sgRds
+      AllowMajorVersionUpgrade: false
+      AutoMinorVersionUpgrade: false
+      DeletionProtection: false
+      PubliclyAccessible: false
+      BackupRetentionPeriod: 0
+      
+      MasterUsername: admin
+      MasterUserPassword: clarusway_1234
+
+      ParameterName:
+    Description: 
+    Type: AWS::EC2::VPC::Id
+    Default: 
+
+    AWSTemplateFormatVersion: 2010-09-09
+
+Description: |
+  Template to build the phonebook app and infrastructure
+
+Parameters:
+
+  vpc:
+    Description: VPC ID
+    Type: AWS::EC2::VPC::Id
+
+  
+Resources:
+
+  sgRds:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Allow access to RDS"
+      GroupName: "RDSAccess"
+      SecurityGroupIngress: 
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: "0.0.0.0/0"
+      VpcId: !Ref vpc
+
+  rdsDatabase:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: mysql
+      EngineVersion: "8.0.39"
+      Port: "3306"
+      DBInstanceIdentifier: phonebook-instance
+      DBName: clarusway_phonebook
+      MasterUsername: admin
+      MasterUserPassword: clarusway_1234
+      DBInstanceClass: db.t2.micro
+      AllocatedStorage: "20"
+      MultiAZ: false
+      VPCSecurityGroups: 
+        - !Ref sgRds
+      AllowMajorVersionUpgrade: false
+      AutoMinorVersionUpgrade: false
+      DeletionProtection: false
+      PubliclyAccessible: false
+      BackupRetentionPeriod: 0
+
+      EngineVersion: "8.0.39"
+      DBInstanceClass: db.t3.micro
+
+       PubliclyAccessible: true
+      BackupRetentionPeriod: 0
+      ApplyImmediately: true
+
+      #db_endpoint = open("/home/ec2-user/dbserver.endpoint", 'r', encoding='UTF-8').readline().strip()
+db_endpoint = "phonebook-instance.cbanmzptkrzf.us-east-1.rds.amazonaws.com"
+
+# Configure mysql database
+
+app.config['MYSQL_DATABASE_HOST'] = db_endpoint
+DEVELOPER_NAME="Altaz"
+
+# This "/home/ec2-user/dbserver.endpoint" file has to be created from cloudformation template and it has RDS endpoint
+db_endpoint_file = open("/home/ec2-user/dbserver.endpoint", 'r', encoding='UTF-8')
+db_endpoint = db_endpoint_file.readline().strip()
+#db_endpoint = "phonebook-instance.cbanmzptkrzf.us-east-1.rds.amazonaws.com"
+db_endpoint_file.close()
+
+git add .
+git commit -m "add phonebook"
+git push
+
+if __name__== '__main__':
+    init_phonebook_db()
+    # app.run(debug=True)
+    app.run(host='0.0.0.0', port=80) 
+
+    git add .
+git commit -m "update port and host"
+git push
+
+#! /bin/bash -x
+yum update -y
+yum install python3 -y
+yum install python3-pip -y
+pip3 install flask
+pip3 install flask_mysql
+echo "${MyDBURI}" > /home/ec2-user/dbserver.endpoint
+FOLDER="https://raw.githubusercontent.com/altazbhanji/my-repository/refs/heads/main/Project-004-Phonebook-Application/"
+curl -s --create-dirs -o "/home/ec2-user/templates/index.html" -L "$FOLDER"templates/index.html
+curl -s --create-dirs -o "/home/ec2-user/templates/add-update.html" -L "$FOLDER"templates/add-update.html
+curl -s --create-dirs -o "/home/ec2-user/templates/delete.html" -L "$FOLDER"templates/delete.html
+curl -s --create-dirs -o "/home/ec2-user/phonebook-app.py" -L "$FOLDER"phonebook-app.py
+python3 /home/ec2-user/phonebook-app.py
+
+
+ LogicalID:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Port: "Number"
+      Protocol: "String"
+      VpcId: "String"  
+      TargetType: "String"
+      HealthyThresholdCount: "Number"
+      UnhealthyThresholdCount: "Number"
+9:20
+  elbTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Port: 80
+      Protocol: HTTP
+      VpcId: !Ref vpc 
+      TargetType: instance
+      HealthyThresholdCount: 2
+      UnhealthyThresholdCount: 2
+9:21
+  LogicalID:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "String" # Required
+      GroupName: "String"
+      SecurityGroupIngress: 
+        - IpProtocol: "String"
+          FromPort: "Number"
+          ToPort: "Number"
+          CidrIp: "String"
+      VpcId: "String"
+9:23
+  sgElb:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Allow HTTP from Internet"
+      GroupName: HttpFromAnywhere
+      SecurityGroupIngress: 
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: "0.0.0.0/0"
+      VpcId: !Ref vpc
+9:26
+  LogicalID:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions: # Required
+        - TargetGroupArn: "String"
+          Type: "String"
+      LoadBalancerArn: "String" # Required
+      Port: "Number"
+      Protocol: "String"
+9:29
+  elbListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions: 
+        - TargetGroupArn: !Ref elbTargetGroup
+          Type: forward
+      LoadBalancerArn: "String"
+      Port: 80
+      Protocol: HTTP
+9:34
+  ParameterName:
+    Description: 
+    Type: List<AWS::EC2::Subnet::Id>
+    Default:     
+9:37
+  elbLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: phonebook-loadbalancer
+      Type: application
+      Scheme: internet-facing
+      IpAddressType: ipv4
+      SecurityGroups: 
+        - !Ref sgElb
+      Subnets: !Ref subnets
+
+
+  elbListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref elbTargetGroup
+          Type: forward
+      LoadBalancerArn: !Ref elbLoadBalancer
+      Port: 80
+      Protocol: HTTP
+9:41
+Parameters:
+
+  vpc:
+    Description: VPC ID
+    Type: AWS::EC2::VPC::Id
+
+  subnets:
+    Description: Subnets for load balancer
+    Type: List<AWS::EC2::Subnet::Id>
+
+  
+
+
+Altaz - Instructor
+  9:55 PM
+echo "${MyDBURI}" > /home/ec2-user/dbserver.endpoint
+9:59
+  ec2LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        ImageId: "{{resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64}}"
+        InstanceType: t2.micro
+        KeyName: !Ref keypairname
+        SecurityGroupIds:
+          - !Ref sgElb
+        TagSpecifications:
+          - ResourceType: instance
+            Tags:
+              - Key: Name
+                Value: phonebook-server
+        UserData:
+          Fn::Base64:
+            !Sub
+              - |
+                #! /bin/bash -x
+                yum update -y
+                yum install python3 -y
+                yum install python3-pip -y
+                pip3 install flask
+                pip3 install flask_mysql
+                echo "${MyDBURI}" > /home/ec2-user/dbserver.endpoint
+                FOLDER="https://raw.githubusercontent.com/altazbhanji/my-repository/refs/heads/main/Project-004-Phonebook-Application/"
+                curl -s --create-dirs -o "/home/ec2-user/templates/index.html" -L "$FOLDER"templates/index.html
+                curl -s --create-dirs -o "/home/ec2-user/templates/add-update.html" -L "$FOLDER"templates/add-update.html
+                curl -s --create-dirs -o "/home/ec2-user/templates/delete.html" -L "$FOLDER"templates/delete.html
+                curl -s --create-dirs -o "/home/ec2-user/phonebook-app.py" -L "$FOLDER"phonebook-app.py
+                python3 /home/ec2-user/phonebook-app.py
+              - MyDBURI: !GetAtt rdsDatabase.Endpoint.Address
+9:59
+  keypairname:
+    Description: Key Pair Name
+    Type: AWS::EC2::KeyPair::KeyName
+
+
+Altaz - Instructor
+  10:05 PM
+  asgAutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AvailabilityZones: !GetAZs ""
+      DesiredCapacity: "2"
+      HealthCheckGracePeriod: 180
+      HealthCheckType: ELB
+      LaunchTemplate:
+        LaunchTemplateId: !Ref ec2LaunchTemplate
+        Version: !GetAtt ec2LaunchTemplate.LatestVersionNumber
+      MaxSize: "3"
+      MinSize: "1"
+      TargetGroupARNs: 
+        - !Ref elbTargetGroup
+10:09
+  ec2LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        ImageId: "{{resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64}}"
+        InstanceType: t2.micro
+        KeyName: !Ref keypairname
+        SecurityGroupIds:
+          - !Ref sgElb
+        TagSpecifications:
+          - ResourceType: instance
+            Tags:
+              - Key: Name
+                Value: phonebook-server
+        UserData:
+          Fn::Base64:
+            !Sub
+              - |
+                #! /bin/bash -x
+                yum update -y
+                yum install python3 -y
+                yum install python3-pip -y
+                pip3 install flask
+                pip3 install flask_mysql
+                echo "${MyDBURI}" > /home/ec2-user/dbserver.endpoint
+                FOLDER="https://raw.githubusercontent.com/altazbhanji/my-repository/refs/heads/main/Project-004-Phonebook-Application/"
+                curl -s --create-dirs -o "/home/ec2-user/templates/index.html" -L "$FOLDER"templates/index.html
+                curl -s --create-dirs -o "/home/ec2-user/templates/add-update.html" -L "$FOLDER"templates/add-update.html
+                curl -s --create-dirs -o "/home/ec2-user/templates/delete.html" -L "$FOLDER"templates/delete.html
+                curl -s --create-dirs -o "/home/ec2-user/phonebook-app.py" -L "$FOLDER"phonebook-app.py
+                python3 /home/ec2-user/phonebook-app.py
+              - MyDBURI: !GetAtt rdsDatabase.Endpoint.Address
+10:13
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: |
+  Template to build the phonebook app and infrastructure
+
+Parameters:
+
+  vpc:
+    Description: VPC ID
+    Type: AWS::EC2::VPC::Id
+
+  subnets:
+    Description: Subnets for load balancer
+    Type: List<AWS::EC2::Subnet::Id>
+
+  keypairname:
+    Description: Key Pair Name
+    Type: AWS::EC2::KeyPair::KeyName
+
+  
+Resources:
+
+  asgAutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AvailabilityZones: !GetAZs ""
+      DesiredCapacity: "2"
+      HealthCheckGracePeriod: 180
+      HealthCheckType: ELB
+      LaunchTemplate:
+        LaunchTemplateId: !Ref ec2LaunchTemplate
+        Version: !GetAtt ec2LaunchTemplate.LatestVersionNumber
+      MaxSize: "3"
+      MinSize: "1"
+      TargetGroupARNs: 
+        - !Ref elbTargetGroup
+
+  ec2LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        ImageId: "{{resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64}}"
+        InstanceType: t2.micro
+        KeyName: !Ref keypairname
+        SecurityGroupIds:
+          - !Ref sgElb
+        TagSpecifications:
+          - ResourceType: instance
+            Tags:
+              - Key: Name
+                Value: phonebook-server
+        UserData:
+          Fn::Base64:
+            !Sub
+              - |
+                #! /bin/bash -x
+                yum update -y
+                yum install python3 -y
+                yum install python3-pip -y
+                pip3 install flask
+                pip3 install flask_mysql
+                echo "${MyDBURI}" > /home/ec2-user/dbserver.endpoint
+                FOLDER="https://raw.githubusercontent.com/altazbhanji/my-repository/refs/heads/main/Project-004-Phonebook-Application/"
+                curl -s --create-dirs -o "/home/ec2-user/templates/index.html" -L "$FOLDER"templates/index.html
+                curl -s --create-dirs -o "/home/ec2-user/templates/add-update.html" -L "$FOLDER"templates/add-update.html
+                curl -s --create-dirs -o "/home/ec2-user/templates/delete.html" -L "$FOLDER"templates/delete.html
+                curl -s --create-dirs -o "/home/ec2-user/phonebook-app.py" -L "$FOLDER"phonebook-app.py
+                python3 /home/ec2-user/phonebook-app.py
+              - MyDBURI: !GetAtt rdsDatabase.Endpoint.Address
+                        
+                        
+  elbLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: phonebook-loadbalancer
+      Type: application
+      Scheme: internet-facing
+      IpAddressType: ipv4
+      SecurityGroups: 
+        - !Ref sgElb
+      Subnets: !Ref subnets
+
+
+  elbListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - TargetGroupArn: !Ref elbTargetGroup
+          Type: forward
+      LoadBalancerArn: !Ref elbLoadBalancer
+      Port: 80
+      Protocol: HTTP
+
+  sgElb:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Allow HTTP from Internet"
+      GroupName: HttpFromAnywhere
+      SecurityGroupIngress: 
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: "0.0.0.0/0"
+      VpcId: !Ref vpc
+
+  elbTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Port: 80
+      Protocol: HTTP
+      VpcId: !Ref vpc 
+      TargetType: instance
+      HealthyThresholdCount: 2
+      UnhealthyThresholdCount: 2
+
+  sgRds:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "Allow access to RDS"
+      GroupName: "RDSAccess"
+      SecurityGroupIngress: 
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: "0.0.0.0/0"
+      VpcId: !Ref vpc
+
+  rdsDatabase:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      Engine: mysql
+      EngineVersion: "8.0.39"
+      Port: "3306"
+      DBInstanceIdentifier: phonebook-instance
+      DBName: clarusway_phonebook
+      MasterUsername: admin
+      MasterUserPassword: clarusway_1234
+      DBInstanceClass: db.t3.micro
+      AllocatedStorage: "20"
+      MultiAZ: false
+      VPCSecurityGroups: 
+        - !Ref sgRds
+      AllowMajorVersionUpgrade: false
+      AutoMinorVersionUpgrade: false
+      DeletionProtection: false
+      PubliclyAccessible: true
+      BackupRetentionPeriod: 0
+      ApplyImmediately: true
+
+
+#Outputs:

@@ -1,0 +1,6 @@
+{
+    "yaml.schemas": {
+        "file:///Users/serdarcavdar/.vscode/extensions/docsmsft.docs-yaml-1.0.5/dist/toc.schema.json": "/toc\\.yml/i",
+        "https://raw.githubusercontent.com/aws/aws-sam-cli/master/schema/samcli.json": "file:///Users/serdarcavdar/Desktop/my-repository/alb-asg-cfn.yml"
+    }
+}
